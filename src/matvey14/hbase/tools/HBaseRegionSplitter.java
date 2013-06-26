@@ -1,5 +1,7 @@
 package matvey14.hbase.tools;
 
+import java.io.IOException;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.ClusterStatus;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -13,10 +15,10 @@ public class HBaseRegionSplitter {
 
 	/**
 	 * @param args
-	 * @throws ZooKeeperConnectionException 
-	 * @throws MasterNotRunningException 
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, InterruptedException  {
 		int maxSplitSizeMB = Integer.parseInt(System.getProperty("maxSplitSize")) * 1024;
 		boolean dryRun = Boolean.parseBoolean(System.getProperty("dryRun", "true"));
 
@@ -28,8 +30,6 @@ public class HBaseRegionSplitter {
 		int totalRegions = 0;
 		int splitRegions = 0;
 		int actuallySplitRegions = 0;
-		
-		System.out.println();
 		
 		for (HServerInfo serverInfo : clusterStatus.getServerInfo()) {
 			final HServerLoad serverLoad = serverInfo.getLoad();
@@ -53,6 +53,7 @@ public class HBaseRegionSplitter {
 			}
 		}
 		
+		System.out.println();
 		System.out.println();
 		
 		System.out.printf("Total regions: %s\n", totalRegions);
